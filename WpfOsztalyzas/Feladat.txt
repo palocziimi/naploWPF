@@ -1,0 +1,3 @@
+﻿A feladatot megtekintheti a Task List segítségével!
+
+Használja a [Segédlet] mappában lévő linkeket és szövegeket!

@@ -1,0 +1,15 @@
+﻿List<Osztalyzat> jegyek = new List<Osztalyzat>();
+
+Sajnos az előbbi szerkezet esetén a tartalom változása nem eredményezi a DataGrid frissítését.
+
+
+Két lehetőség van:
+
+1) Refresh()
+dgJegyek.Items.Refresh(); hívása 
+(új felvétele után, névsorrend változásnál)
+
+2)
+Alkalmazza a List osztály helyett az ObservableCollection osztályt!
+
+Minden módosítás, új elem felvétele vagy meglévő törlése már le lesz követve!

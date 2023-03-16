@@ -1,0 +1,2 @@
+﻿Erre szükség van!
+using Microsoft.Win32;

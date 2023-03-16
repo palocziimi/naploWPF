@@ -1,0 +1,106 @@
+﻿<Window x:Class="WpfOsztalyzas.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfOsztalyzas"
+        mc:Ignorable="d"
+        Title="WPF Napló" Height="600" Width="500">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+        <!-- Első sor - név -->
+        <Label Content="Neve:" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtNev" 
+                 VerticalAlignment="Center"
+                 Grid.Column="1"
+                 Margin="10"
+                 Background="Cornsilk"/>
+
+        <!-- 2. sor - dátum -->
+        <Label Content="Dátum:" VerticalAlignment="Center"
+               Grid.Row="1"/>
+        <DatePicker x:Name="datDatum" 
+                    VerticalAlignment="Center"
+                    Margin="10"
+                    Grid.Row="1" Grid.Column="1"/>
+
+        <!-- 3. sor - tantárgy -->
+        <Label Content="Tantárgy:" VerticalAlignment="Center"
+                   Grid.Row="2"/>
+        <ComboBox x:Name="cboTantargy"
+                  SelectedIndex="0"
+                  VerticalAlignment="Center" Margin="10" 
+                  Grid.Row="2" Grid.Column="1">
+            <ComboBoxItem Content="Matematika"/>
+            <ComboBoxItem Content="Angol nyelv"/>
+            <ComboBoxItem Content="Fizika"/>
+            <ComboBoxItem Content="Történelem"/>
+            <ComboBoxItem Content="Magyar irodalom"/>
+        </ComboBox>
+
+        <!-- 4. sor - jegy -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center">
+            <Label Content="Jegy:" VerticalAlignment="Center"/>
+            <Label x:Name="lblJegy" FontSize="16" 
+                   Content="5"
+                   FontWeight="DemiBold" Foreground="Red"/>
+        </StackPanel>
+        
+        <Slider x:Name="sliJegy" 
+                Margin="10"
+                Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"
+                Minimum="1" Maximum="5" Value="5"
+                TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="sliJegy_ValueChanged"/>
+
+        <!-- 5. sor - nyomógombok -->
+        <Button x:Name="btnNaploBetoltese" 
+                Margin="20 10"
+                Grid.Row="4"
+                Content="Napló betöltése" Click="btnBetolt_Click"/>
+
+        <Button x:Name="btnRogzit" 
+                Margin="20 10"
+                Grid.Row="4" Grid.Column="1"
+                Content="Rögzít naplóba" Click="btnRogzit_Click"/>
+
+        <!-- 6. sor - adatok -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <Label Content="Napló neve:" VerticalAlignment="Center"/>
+            <Label x:Name="lblNaploNev" FontSize="16" 
+                   Content="napló"
+                   FontWeight="DemiBold" Foreground="Red"/>
+        </StackPanel>
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
+                    VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Label Content="Jegyek száma:" VerticalAlignment="Center"/>
+            <Label x:Name="lblJegyekSzama" FontSize="16" 
+                   Content="5"
+                   FontWeight="DemiBold" Foreground="Red"/>
+        </StackPanel>
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
+                    VerticalAlignment="Center" HorizontalAlignment="Right">
+            <Label Content="Átlag:" VerticalAlignment="Center"/>
+            <Label x:Name="lblAtlag" FontSize="16" 
+                   Content="5"
+                   FontWeight="DemiBold" Foreground="Red"/>
+        </StackPanel>
+
+        <!-- 7. sor - Datagrid -->
+        <DataGrid x:Name="dgJegyek" Grid.Row="6" Grid.ColumnSpan="2"
+                  Margin="4"
+                  Background="LightGreen"/>
+    </Grid>
+</Window>
