@@ -19,13 +19,9 @@ using Microsoft.Win32;
 
 namespace WpfOsztalyzas
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        string fajlNev = "naplo.txt";
-        //Így minden metódus fogja tudni használni.
+        string fajlNev = "naplo.csv";
         ObservableCollection<Osztalyzat> jegyek = new ObservableCollection<Osztalyzat>();
 
         public MainWindow()
@@ -36,26 +32,12 @@ namespace WpfOsztalyzas
             // todo A kiválasztott naplót egyből töltse be és a tartalmát jelenítse meg a datagrid-ben!
 
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Szöveges dokumentum (.txt)|*.txt";
+            dialog.Filter = "CSV Állomány (.csv)|*.csv";
 
             if (dialog.ShowDialog() == true)
             {
                 fajlNev = dialog.FileName;
-
-                StreamReader sr = new StreamReader(fajlNev); //olvasásra nyitja az állományt
-                while (!sr.EndOfStream) //amíg nem ér a fájl végére
-                {
-                    string[] mezok = sr.ReadLine().Split(";"); //A beolvasott sort feltördeli mezőkre
-                                                               //A mezők értékeit felhasználva létrehoz egy objektumot
-                    Osztalyzat ujJegy = new Osztalyzat(mezok[0], mezok[1], mezok[2], int.Parse(mezok[3]));
-                    jegyek.Add(ujJegy); //Az objektumot a lista végére helyezi
-                }
-                sr.Close(); //állomány lezárása
-
-                //A Datagrid adatforrása a jegyek nevű lista lesz.
-                //A lista objektumokat tartalmaz. Az objektumok lesznek a rács sorai.
-                //Az objektum nyilvános tulajdonságai kerülnek be az oszlopokba.
-                dgJegyek.ItemsSource = jegyek;
+                Frissit(fajlNev);
             }
             else
             {
@@ -88,7 +70,7 @@ namespace WpfOsztalyzas
                 }
             }
             
-            if (Convert.ToDateTime(datDatum.Text) > 
+            if (datDatum.Text == "" || Convert.ToDateTime(datDatum.Text) > 
                 Convert.ToDateTime(DateTime.Now.ToString(new CultureInfo("hu-HU"))))
             {
                 MessageBox.Show("A beírt dátum újabb, mint a mai dátum", "Hiba");
@@ -98,52 +80,20 @@ namespace WpfOsztalyzas
             //todo A rögzítés mindig az aktuálisan megnyitott naplófájlba történjen!
 
             //A CSV szerkezetű fájlba kerülő sor előállítása
-            string csvSor = $"{txtNev.Text};{datDatum.Text};{cboTantargy.Text};{sliJegy.Value}";
+            string csvSor = $"{(rdoKeresztNev.IsChecked == false ? txtNev.Text : Osztalyzat.ForditottNev(txtNev.Text))};{datDatum.Text};{cboTantargy.Text};{sliJegy.Value}";
             //Megnyitás hozzáfűzéses írása (APPEND)
             StreamWriter sw = new StreamWriter(fajlNev, append: true);
             sw.WriteLine(csvSor);
             sw.Close();
             //todo Az újonnan felvitt jegy is jelenjen meg a datagrid-ben!
 
-            jegyek.Clear();  //A lista előző tartalmát töröljük
-
-
-            StreamReader sr = new StreamReader(fajlNev); //olvasásra nyitja az állományt
-            while (!sr.EndOfStream) //amíg nem ér a fájl végére
-            {
-                string[] mezok = sr.ReadLine().Split(";"); //A beolvasott sort feltördeli mezőkre
-                //A mezők értékeit felhasználva létrehoz egy objektumot
-                Osztalyzat ujJegy = new Osztalyzat(mezok[0], mezok[1], mezok[2], int.Parse(mezok[3]));
-                jegyek.Add(ujJegy); //Az objektumot a lista végére helyezi
-            }
-            sr.Close(); //állomány lezárása
-
-            //A Datagrid adatforrása a jegyek nevű lista lesz.
-            //A lista objektumokat tartalmaz. Az objektumok lesznek a rács sorai.
-            //Az objektum nyilvános tulajdonságai kerülnek be az oszlopokba.
-            dgJegyek.ItemsSource = jegyek;
+            Frissit(fajlNev);
 
         }
 
         private void btnBetolt_Click(object sender, RoutedEventArgs e)
         {
-            jegyek.Clear();  //A lista előző tartalmát töröljük
-
-
-            StreamReader sr = new StreamReader(fajlNev); //olvasásra nyitja az állományt
-            while (!sr.EndOfStream) //amíg nem ér a fájl végére
-            {
-                string[] mezok = sr.ReadLine().Split(";"); //A beolvasott sort feltördeli mezőkre
-                //A mezők értékeit felhasználva létrehoz egy objektumot
-                Osztalyzat ujJegy = new Osztalyzat(mezok[0], mezok[1], mezok[2], int.Parse(mezok[3]));
-                jegyek.Add(ujJegy); //Az objektumot a lista végére helyezi
-            }
-            sr.Close(); //állomány lezárása
-
-            //A Datagrid adatforrása a jegyek nevű lista lesz.
-            //A lista objektumokat tartalmaz. Az objektumok lesznek a rács sorai.
-            //Az objektum nyilvános tulajdonságai kerülnek be az oszlopokba.
-            dgJegyek.ItemsSource = jegyek;
+            Frissit(fajlNev);
         }
 
         private void sliJegy_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -160,10 +110,39 @@ namespace WpfOsztalyzas
 
         //todo Helyezzen el alkalmas helyre 2 rádiónyomógombot!
         //Feliratok: [■] Vezetéknév->Keresztnév [O] Keresztnév->Vezetéknév
-        //A táblázatban a név azserint szerepeljen, amit a rádiónyomógomb mutat!
+        //A táblázatban a név aszerint szerepeljen, amit a rádiónyomógomb mutat!
         //A feladat megoldásához használja fel a ForditottNev metódust!
         //Módosíthatja az osztályban a Nev property hozzáférhetőségét!
         //Megjegyzés: Felételezzük, hogy csak 2 tagú nevek vannak
+
+        private void Frissit(string fileName = "naplo.csv")
+        {
+            jegyek.Clear();  //A lista előző tartalmát töröljük
+
+
+            StreamReader sr = new StreamReader(fajlNev); //olvasásra nyitja az állományt
+            while (!sr.EndOfStream) //amíg nem ér a fájl végére
+            {
+                string[] mezok = sr.ReadLine().Split(";"); //A beolvasott sort feltördeli mezőkre
+                //A mezők értékeit felhasználva létrehoz egy objektumot
+                Osztalyzat ujJegy = new Osztalyzat(mezok[0], mezok[1], mezok[2], int.Parse(mezok[3]));
+                jegyek.Add(ujJegy); //Az objektumot a lista végére helyezi
+
+            }
+            sr.Close(); //állomány lezárása
+
+            //A Datagrid adatforrása a jegyek nevű lista lesz.
+            //A lista objektumokat tartalmaz. Az objektumok lesznek a rács sorai.
+            //Az objektum nyilvános tulajdonságai kerülnek be az oszlopokba.
+            dgJegyek.ItemsSource = jegyek;
+
+            lblNaploNev.Content = fajlNev;
+            lblJegyekSzama.Content = dgJegyek.Items.Count;
+            
+            double jegyosszeg = 0.0;
+            for (int i = 0; i < jegyek.Count; i++) jegyosszeg += jegyek[i].Jegy;
+            lblAtlag.Content = Math.Round(jegyosszeg / dgJegyek.Items.Count, 2);
+        }
     }
 }
 

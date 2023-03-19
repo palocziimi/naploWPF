@@ -17,8 +17,9 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
             <RowDefinition Height="5*"/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <!-- Első sor - név -->
         <Label Content="Neve:" VerticalAlignment="Center"/>
@@ -75,32 +76,36 @@
                 Grid.Row="4" Grid.Column="1"
                 Content="Rögzít naplóba" Click="btnRogzit_Click"/>
 
-        <!-- 6. sor - adatok -->
-        <StackPanel Grid.Row="5" Orientation="Horizontal" VerticalAlignment="Center"
+        <!-- 6. sor - Datagrid -->
+        <DataGrid x:Name="dgJegyek" Grid.Row="5" Grid.ColumnSpan="2"
+                  Margin="4"
+                  Background="LightGreen"/>
+        
+        <!-- 7. sor - adatok -->
+        <StackPanel Grid.Row="6" Orientation="Horizontal" VerticalAlignment="Center"
                     HorizontalAlignment="Center">
-            <Label Content="Napló neve:" VerticalAlignment="Center"/>
-            <Label x:Name="lblNaploNev" FontSize="16" 
-                   Content="napló"
-                   FontWeight="DemiBold" Foreground="Red"/>
+            <Label x:Name="lblNaploNev" Content="" VerticalAlignment="Center"/>
         </StackPanel>
-        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
-                    VerticalAlignment="Center" HorizontalAlignment="Left">
+        <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" 
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0">
             <Label Content="Jegyek száma:" VerticalAlignment="Center"/>
             <Label x:Name="lblJegyekSzama" FontSize="16" 
                    Content="5"
                    FontWeight="DemiBold" Foreground="Red"/>
         </StackPanel>
-        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
-                    VerticalAlignment="Center" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" 
+                    VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0">
             <Label Content="Átlag:" VerticalAlignment="Center"/>
             <Label x:Name="lblAtlag" FontSize="16" 
                    Content="5"
                    FontWeight="DemiBold" Foreground="Red"/>
         </StackPanel>
 
-        <!-- 7. sor - Datagrid -->
-        <DataGrid x:Name="dgJegyek" Grid.Row="6" Grid.ColumnSpan="2"
-                  Margin="4"
-                  Background="LightGreen"/>
+        <!-- 8. sor - RadioButton -->
+        <RadioButton Grid.Row = "7" Content="Vezetéknév->Keresztnév" VerticalAlignment="Center" 
+                     HorizontalAlignment="Center" IsChecked="True"/>
+        <RadioButton x:Name="rdoKeresztNev" Grid.Row = "7" Grid.Column="1" Content="Keresztnév->Vezetéknév" 
+                     VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
     </Grid>
 </Window>

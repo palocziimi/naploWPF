@@ -8,7 +8,7 @@ namespace WpfOsztalyzas
 {
     public class Osztalyzat
     {
-        String nev;
+        public String nev;
         String datum;
         String tantargy;
         int jegy;
@@ -25,6 +25,13 @@ namespace WpfOsztalyzas
         public string Datum { get => datum;  }
         public string Tantargy { get => tantargy; }
         public int Jegy { get => jegy; }
+        public string CsaladiNev { get => nev.Split(' ')[0]; }
+
+        public static string ForditottNev(string nev)
+        {
+            string csaladnev = nev.Split(' ')[0];
+            return nev.Substring(nev.IndexOf(' ')).Trim() + " " + csaladnev;
+        }
     }
         //todo Bővítse az osztályt! Készítsen CsaladiNev néven property-t, ami a névből a családi nevet adja vissza. Feltételezve, hogy a névnek csak az első tagja az.
 
